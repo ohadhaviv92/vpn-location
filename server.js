@@ -11,7 +11,7 @@ let locationIndex = 0;
 
 setInterval(() => {
   locationIndex = 0;
-}, 1000 * 60 * 61);
+}, 1000 * 60 * 70);
 
 app.get("/", (req, res) => {
   res.send("Hello from Node.js!");
