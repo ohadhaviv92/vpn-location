@@ -6,9 +6,7 @@ let usersArr = [];
 const app = express();
 const PORT = process.env.PORT || 3002;
 
-let userIndex = 0;
-
-let locationIndex = 0;
+let index = 0;
 
 app.use(express.json());
 
@@ -70,8 +68,9 @@ app.get("/", (req, res) => {
 });
 
 app.get("/location", (req, res) => {
-  const userData = usersArr[userIndex++ % usersArr.length];
-  const location = locations[locationIndex++ % locations.length];
+  const userData = usersArr[index % usersArr.length];
+  const location = locations[index % locations.length];
+  index++;
   if (userData.session && userData.session.sessionExpiry) {
     const expiryDate = new Date(userData.session.sessionExpiry);
     if (expiryDate < new Date()) {

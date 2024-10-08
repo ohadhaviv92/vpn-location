@@ -1,12 +1,7 @@
 export const locations = [
   "Israel",
-  "USA - New Jersey - 1",
-  "USA - New Jersey - 3",
   "USA - New York",
-  "USA - Atlanta",
   "USA - Tampa - 1",
-  "USA - Miami - 2",
-  "USA - Mami",
   "USA - Washington DC",
   "USA - Dallas",
   "USA - Houston",
@@ -154,4 +149,9 @@ export const locations = [
   "Morocco",
   "South Africa",
   "Kenya",
+  "USA - Miami - 2",
+  "USA - Miami",
+  "USA - Atlanta",
+  "USA - New Jersey - 3",
+  "USA - New Jersey - 1",
 ];
