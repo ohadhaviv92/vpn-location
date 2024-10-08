@@ -60,7 +60,7 @@ setInterval(() => {
   ).catch((error) => {
     console.error("Error saving users to file:", error);
   });
-  locationIndex = 0;
+  index = 0;
 }, 1000 * 60 * 70);
 
 app.get("/", (req, res) => {
