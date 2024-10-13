@@ -80,6 +80,7 @@ app.get("/location", (req, res) => {
   res.json({
     location,
     user: userData,
+    session: userData.session,
   });
 });
 
