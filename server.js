@@ -1,7 +1,7 @@
 import express from "express";
 import { locations } from "./location.js";
 import fs from "fs/promises";
-
+import axios from "axios";
 let usersArr = [];
 const app = express();
 const PORT = process.env.PORT || 3002;
@@ -9,7 +9,34 @@ const PORT = process.env.PORT || 3002;
 let userIndex = 0;
 let locationIndex = 0;
 
+const sessionToCookie = {};
+
 app.use(express.json());
+
+app.post("/sellSession", (req, res) => {
+  const { cookies } = req.body;
+  if (cookies) {
+    let sessionID = Date.now().toString();
+    sessionToCookie[sessionID] = cookies;
+    res.status(200).json({ message: "Session saved", sessionID: sessionID });
+  } else {
+    res.status(400).json({ message: "Invalid cookies" });
+  }
+});
+
+app.get("/listItem/:sessionID", async (req, res) => {
+  const { asset_id, price } = req.query;
+  let error = null;
+  await listItem(asset_id, price, sessionToCookie[req.params.sessionID]).catch(
+    (e) => {
+      error = e.message;
+    }
+  );
+  if (error) {
+    res.status(500).json({ message: error });
+  }
+  res.status(200).json({ message: "Item listed" });
+});
 
 app.post("/addUserSession", (req, res) => {
   const { username, cookie, localStorage } = req.body;
@@ -51,6 +78,26 @@ async function init() {
   });
 }
 
+async function listItem(asset_id, price, cookie) {
+  console.log("Listing item", asset_id, price, cookie);
+  const url = "https://csfloat.com/api/v1/listings";
+  await axios.post(
+    url,
+    {
+      asset_id: asset_id,
+      price: price,
+      type: "buy_now",
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: cookie,
+        Referer: "https://csfloat.com/sell",
+      },
+    }
+  );
+}
+
 setInterval(() => {
   //save usersArr to file
   console.log("Saving users to file");
@@ -70,7 +117,7 @@ app.get("/", (req, res) => {
 app.get("/location", (req, res) => {
   const userData = usersArr[userIndex++ % usersArr.length];
   const location = locations[locationIndex++ % locations.length];
-  
+
   if (userData.session && userData.session.sessionExpiry) {
     const expiryDate = new Date(userData.session.sessionExpiry);
     if (expiryDate < new Date()) {
