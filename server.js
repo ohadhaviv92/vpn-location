@@ -6,7 +6,8 @@ let usersArr = [];
 const app = express();
 const PORT = process.env.PORT || 3002;
 
-let index = 0;
+let userIndex = 0;
+let locationIndex = 0;
 
 app.use(express.json());
 
@@ -60,7 +61,6 @@ setInterval(() => {
   ).catch((error) => {
     console.error("Error saving users to file:", error);
   });
-  index = 0;
 }, 1000 * 60 * 70);
 
 app.get("/", (req, res) => {
@@ -68,9 +68,9 @@ app.get("/", (req, res) => {
 });
 
 app.get("/location", (req, res) => {
-  const userData = usersArr[index % usersArr.length];
-  const location = locations[index % locations.length];
-  index++;
+  const userData = usersArr[userIndex++ % usersArr.length];
+  const location = locations[locationIndex++ % locations.length];
+  
   if (userData.session && userData.session.sessionExpiry) {
     const expiryDate = new Date(userData.session.sessionExpiry);
     if (expiryDate < new Date()) {
