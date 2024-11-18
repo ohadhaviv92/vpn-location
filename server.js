@@ -1,5 +1,6 @@
 import express from "express";
 import { locations } from "./location.js";
+import { locationsNord } from "./location-nordvpn.js";
 import fs from "fs/promises";
 import axios from "axios";
 let usersArr = [];
@@ -8,6 +9,8 @@ const PORT = process.env.PORT || 3002;
 
 let userIndex = 0;
 let locationIndex = 0;
+
+let nordLocationIndex = 0;
 
 const sessionToCookie = {};
 
@@ -117,6 +120,23 @@ app.get("/", (req, res) => {
 app.get("/location", (req, res) => {
   const userData = usersArr[userIndex++ % usersArr.length];
   const location = locations[locationIndex++ % locations.length];
+
+  if (userData.session && userData.session.sessionExpiry) {
+    const expiryDate = new Date(userData.session.sessionExpiry);
+    if (expiryDate < new Date()) {
+      userData.session = null;
+    }
+  }
+  res.json({
+    location,
+    user: userData,
+    session: userData.session,
+  });
+});
+
+app.get("/location-nordvpn", (req, res) => {
+  const userData = usersArr[userIndex++ % usersArr.length];
+  const location = locationsNord[nordLocationIndex++ % locationsNord.length];
 
   if (userData.session && userData.session.sessionExpiry) {
     const expiryDate = new Date(userData.session.sessionExpiry);
