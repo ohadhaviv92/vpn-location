@@ -136,7 +136,8 @@ app.get("/location", (req, res) => {
 
 app.get("/location-nordvpn", (req, res) => {
   const userData = usersArr[userIndex++ % usersArr.length];
-  const location = locationsNord[nordLocationIndex++ % locationsNord.length];
+  const location =
+    locationsNord[nordLocationIndex++ % locationsNord.length].command;
 
   if (userData.session && userData.session.sessionExpiry) {
     const expiryDate = new Date(userData.session.sessionExpiry);
