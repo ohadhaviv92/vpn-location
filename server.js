@@ -29,7 +29,16 @@ app.post("/sellSession", (req, res) => {
 
 app.get("/listItem/:sessionID", async (req, res) => {
   const { asset_id, price } = req.query;
+  if (!req.params.sessionID || !asset_id || !price) {
+    res.status(400).json({ message: "Invalid data" });
+    return;
+  }
   let error = null;
+  let cookie = sessionToCookie[req.params.sessionID];
+  if (!cookie) {
+    res.status(400).json({ message: "Invalid sessionID no cookie" });
+    return;
+  }
   await listItem(asset_id, price, sessionToCookie[req.params.sessionID]).catch(
     (e) => {
       error = e.message;
@@ -37,6 +46,7 @@ app.get("/listItem/:sessionID", async (req, res) => {
   );
   if (error) {
     res.status(500).json({ message: error });
+    return;
   }
   res.status(200).json({ message: "Item listed" });
 });
