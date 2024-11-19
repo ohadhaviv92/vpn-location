@@ -121,7 +121,8 @@ setInterval(() => {
   ).catch((error) => {
     console.error("Error saving users to file:", error);
   });
-}, 1000 * 60 * 70);
+  nordLocationIndex = 0;
+}, 1000 * 60 * 120);
 
 app.get("/", (req, res) => {
   res.send("Hello from Node.js!");
