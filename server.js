@@ -151,7 +151,7 @@ app.get("/location", (req, res) => {
     );
   });
   if (locationIndex !== -1) {
-    locations[locationIndex].rateLimitReset += 1000 * 60 * 60;
+    locations[locationIndex].rateLimitReset += 1000 * 60 * 5;
     locationRes = locations[locationIndex].name;
     userIndex = locationIndex;
   } else {
@@ -163,7 +163,7 @@ app.get("/location", (req, res) => {
       );
     });
     if (index !== -1) {
-      locations[index].rateLimitReset = now + 1000 * 60 * 60;
+      locations[index].rateLimitReset = now + 1000 * 60 * 5;
       locationRes = locations[index].name;
       userIndex = index;
     }
@@ -239,7 +239,7 @@ app.get("/location-nordvpn", (req, res) => {
     );
   });
   if (locationIndex !== -1) {
-    locationsNord[locationIndex].rateLimitReset += 1000 * 60 * 60;
+    locationsNord[locationIndex].rateLimitReset += 1000 * 60 * 5;
     locationRes = locationsNord[locationIndex].command;
     userIndex = locationIndex;
   } else {
@@ -251,7 +251,7 @@ app.get("/location-nordvpn", (req, res) => {
       );
     });
     if (index !== -1) {
-      locationsNord[index].rateLimitReset = now + 1000 * 60 * 60;
+      locationsNord[index].rateLimitReset = now + 1000 * 60 * 5;
       locationRes = locationsNord[index].command;
       userIndex = index;
     }
@@ -261,7 +261,7 @@ app.get("/location-nordvpn", (req, res) => {
       error: "No available location",
     });
   } else {
-    const userData = usersArr[userIndex % usersArr.length];
+    const userData = usersArr[usersArr.length - 1 - userIndex];
     if (userData.session && userData.session.sessionExpiry) {
       const expiryDate = new Date(userData.session.sessionExpiry);
       if (expiryDate < new Date()) {
