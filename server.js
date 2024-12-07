@@ -11,6 +11,8 @@ let locationIndex = 0;
 
 let nordLocationIndex = 0;
 
+let userIndex = 0;
+
 const sessionToCookie = {};
 
 app.use(express.json());
@@ -153,7 +155,7 @@ app.get("/location", (req, res) => {
   if (locationIndex !== -1) {
     locations[locationIndex].rateLimitReset = now + 1000 * 60 * 65;
     locationRes = locations[locationIndex];
-    userIndex = locationIndex;
+    //userIndex = locationIndex;
   } else {
     const index = locations.findIndex((location) => {
       return (
@@ -165,7 +167,7 @@ app.get("/location", (req, res) => {
     if (index !== -1) {
       locations[index].rateLimitReset = now + 1000 * 60 * 65;
       locationRes = locations[index];
-      userIndex = index;
+      //userIndex = index;
     }
   }
   if (!locationRes) {
@@ -173,7 +175,7 @@ app.get("/location", (req, res) => {
       error: "No available location",
     });
   } else {
-    const userData = usersArr[userIndex % usersArr.length];
+    const userData = usersArr[userIndex++ % usersArr.length];
     if (userData.session && userData.session.sessionExpiry) {
       const expiryDate = new Date(userData.session.sessionExpiry);
       if (expiryDate < new Date()) {
