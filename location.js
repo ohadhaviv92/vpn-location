@@ -36,8 +36,7 @@ export const locations = [
   {
       "vpn": "openvpn",    
       "vpnType": "nord",
-      "c
-    country": "Albania",
+    "country": "Albania",
       "region": "Europe",
       "city": "Tirana",
       "categories": [
