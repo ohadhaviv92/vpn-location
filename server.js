@@ -123,7 +123,7 @@ app.get("/location", (req, res) => {
   let userIndex;
   if (block || userNotLogin) {
     const indexBlock = locations.findIndex(
-      (location) => location.name === prevLocationName
+      (location) => location.hostname === prevLocationName
     );
     if (indexBlock !== -1) {
       if (block) {
@@ -137,7 +137,7 @@ app.get("/location", (req, res) => {
   if (prevLocationName && rateLimitReset) {
     rateLimitReset = parseInt(rateLimitReset);
     const locationIndex = locations.findIndex(
-      (location) => location.name === prevLocationName
+      (location) => location.hostname === prevLocationName
     );
     if (locationIndex !== -1) {
       locations[locationIndex].rateLimitReset = rateLimitReset;
@@ -152,7 +152,7 @@ app.get("/location", (req, res) => {
   });
   if (locationIndex !== -1) {
     locations[locationIndex].rateLimitReset = now + 1000 * 60 * 65;
-    locationRes = locations[locationIndex].name;
+    locationRes = locations[locationIndex];
     userIndex = locationIndex;
   } else {
     const index = locations.findIndex((location) => {
@@ -164,7 +164,7 @@ app.get("/location", (req, res) => {
     });
     if (index !== -1) {
       locations[index].rateLimitReset = now + 1000 * 60 * 65;
-      locationRes = locations[index].name;
+      locationRes = locations[index];
       userIndex = index;
     }
   }
@@ -181,7 +181,10 @@ app.get("/location", (req, res) => {
       }
     }
     res.json({
-      location: locationRes,
+      location: {
+        hostname: locationRes.hostname,
+        vpnType: locationRes.vpnType,
+      },
       user: userData,
       session: userData.session,
     });
