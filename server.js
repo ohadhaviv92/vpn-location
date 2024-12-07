@@ -122,7 +122,6 @@ app.get("/broken-location-nordvpn", (req, res) => {
 
 app.get("/location", (req, res) => {
   let { prevLocationName, rateLimitReset, block, userNotLogin } = req.query;
-  let userIndex;
   if (block || userNotLogin) {
     const indexBlock = locations.findIndex(
       (location) => location.hostname === prevLocationName
