@@ -152,7 +152,7 @@ app.get("/location", (req, res) => {
     );
   });
   if (locationIndex !== -1) {
-    locations[locationIndex].rateLimitReset = now + 1000 * 60 * 65;
+    locations[locationIndex].rateLimitReset = now + 1000 * 60 * 5;
     locationRes = locations[locationIndex];
     //userIndex = locationIndex;
   } else {
@@ -164,7 +164,7 @@ app.get("/location", (req, res) => {
       );
     });
     if (index !== -1) {
-      locations[index].rateLimitReset = now + 1000 * 60 * 65;
+      locations[index].rateLimitReset = now + 1000 * 60 * 5;
       locationRes = locations[index];
       //userIndex = index;
     }
