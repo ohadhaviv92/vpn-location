@@ -123,74 +123,97 @@ app.get("/broken-location-nordvpn", (req, res) => {
 app.get("/location", (req, res) => {
   let { prevLocationName, rateLimitReset, block, userNotLogin } = req.query;
   if (block || userNotLogin) {
-    const indexBlock = locations.findIndex(
-      (location) => location.hostname === prevLocationName
-    );
-    if (indexBlock !== -1) {
-      if (block) {
-        locations[indexBlock].block = true;
-      } else {
-        locations[indexBlock].userNotLogin = true;
-      }
-      delete locations[indexBlock].rateLimitReset;
+    console.log("block", block, "userNotLogin", userNotLogin);
+  }
+  let locationRes = locations[locationIndex++ % locations.length];
+  const userData = usersArr[userIndex++ % usersArr.length];
+  if (userData.session && userData.session.sessionExpiry) {
+    const expiryDate = new Date(userData.session.sessionExpiry);
+    if (expiryDate < new Date()) {
+      userData.session = null;
     }
   }
-  if (prevLocationName && rateLimitReset) {
-    rateLimitReset = parseInt(rateLimitReset);
-    const locationIndex = locations.findIndex(
-      (location) => location.hostname === prevLocationName
-    );
-    if (locationIndex !== -1) {
-      locations[locationIndex].rateLimitReset = rateLimitReset;
-    }
-  }
-  const now = Date.now();
-  let locationRes;
-  const locationIndex = locations.findIndex((location) => {
-    return (
-      location.rateLimitReset < now && !location.block && !location.userNotLogin
-    );
+  res.json({
+    location: {
+      hostname: locationRes.hostname,
+      vpnType: locationRes.vpnType,
+    },
+    user: userData,
+    session: userData.session,
   });
-  if (locationIndex !== -1) {
-    locations[locationIndex].rateLimitReset = now + 1000 * 60 * 5;
-    locationRes = locations[locationIndex];
-    //userIndex = locationIndex;
-  } else {
-    const index = locations.findIndex((location) => {
-      return (
-        location.rateLimitReset === undefined &&
-        !location.block &&
-        !location.userNotLogin
-      );
-    });
-    if (index !== -1) {
-      locations[index].rateLimitReset = now + 1000 * 60 * 5;
-      locationRes = locations[index];
-      //userIndex = index;
-    }
-  }
-  if (!locationRes) {
-    res.json({
-      error: "No available location",
-    });
-  } else {
-    const userData = usersArr[userIndex++ % usersArr.length];
-    if (userData.session && userData.session.sessionExpiry) {
-      const expiryDate = new Date(userData.session.sessionExpiry);
-      if (expiryDate < new Date()) {
-        userData.session = null;
-      }
-    }
-    res.json({
-      location: {
-        hostname: locationRes.hostname,
-        vpnType: locationRes.vpnType,
-      },
-      user: userData,
-      session: userData.session,
-    });
-  }
 });
+
+// app.get("/location", (req, res) => {
+//   let { prevLocationName, rateLimitReset, block, userNotLogin } = req.query;
+//   if (block || userNotLogin) {
+//     const indexBlock = locations.findIndex(
+//       (location) => location.hostname === prevLocationName
+//     );
+//     if (indexBlock !== -1) {
+//       if (block) {
+//         locations[indexBlock].block = true;
+//       } else {
+//         locations[indexBlock].userNotLogin = true;
+//       }
+//       delete locations[indexBlock].rateLimitReset;
+//     }
+//   }
+//   if (prevLocationName && rateLimitReset) {
+//     rateLimitReset = parseInt(rateLimitReset);
+//     const locationIndex = locations.findIndex(
+//       (location) => location.hostname === prevLocationName
+//     );
+//     if (locationIndex !== -1) {
+//       locations[locationIndex].rateLimitReset = rateLimitReset;
+//     }
+//   }
+//   const now = Date.now();
+//   let locationRes;
+//   const locationIndex = locations.findIndex((location) => {
+//     return (
+//       location.rateLimitReset < now && !location.block && !location.userNotLogin
+//     );
+//   });
+//   if (locationIndex !== -1) {
+//     locations[locationIndex].rateLimitReset = now + 1000 * 60 * 5;
+//     locationRes = locations[locationIndex];
+//     //userIndex = locationIndex;
+//   } else {
+//     const index = locations.findIndex((location) => {
+//       return (
+//         location.rateLimitReset === undefined &&
+//         !location.block &&
+//         !location.userNotLogin
+//       );
+//     });
+//     if (index !== -1) {
+//       locations[index].rateLimitReset = now + 1000 * 60 * 5;
+//       locationRes = locations[index];
+//       //userIndex = index;
+//     }
+//   }
+//   if (!locationRes) {
+//     res.json({
+//       error: "No available location",
+//     });
+//   } else {
+//     const userData = usersArr[userIndex++ % usersArr.length];
+//     if (userData.session && userData.session.sessionExpiry) {
+//       const expiryDate = new Date(userData.session.sessionExpiry);
+//       if (expiryDate < new Date()) {
+//         userData.session = null;
+//       }
+//     }
+//     res.json({
+//       location: {
+//         hostname: locationRes.hostname,
+//         vpnType: locationRes.vpnType,
+//       },
+//       user: userData,
+//       session: userData.session,
+//     });
+//   }
+// });
 
 app.get("/available-locations-nordvpn", (req, res) => {
   const arr = locationsNord.filter(
