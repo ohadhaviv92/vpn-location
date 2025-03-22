@@ -1,6 +1,21 @@
 {
   "users": [
     {
+      "username": "Tropper100",
+      "password": "Doa0s@293!",
+      "owner": "david"
+    },
+    {
+      "username": "cardonlyscript7",
+      "password": "SBDcard10",
+      "owner": "galel"
+    },
+    {
+      "username": "cardonlyscript8",
+      "password": "SBDcard11",
+      "owner": "galel"
+    },
+    {
       "username": "bamba2787",
       "password": "doraC0f4ss"
     },
