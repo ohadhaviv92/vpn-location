@@ -1,6 +1,11 @@
 {
   "users": [
     {
+      "username": "cardonlyscript18",
+      "password": "SBDcard12",
+      "owner": "galel"
+    },
+    {
       "username": "cardonlyscript7",
       "password": "SBDcard10",
       "owner": "galel"
